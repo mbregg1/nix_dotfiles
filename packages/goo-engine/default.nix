@@ -127,7 +127,7 @@ stdenv.mkDerivation (
           "-DPYTHON_NUMPY_PATH=${python3Packages.numpy}/${python3.sitePackages}"
           "-DPYTHON_VERSION=${python3.pythonVersion}"
           "-DWITH_ALEMBIC=ON"
-          "-DWITH_CODEC_FFMPEG=OFF"
+          "-DWITH_CODEC_FFMPEG=OFF" # turned off to make it compile
           "-DWITH_CODEC_SNDFILE=ON"
           "-DWITH_FFTW3=ON"
           "-DWITH_IMAGE_OPENJPEG=ON"
@@ -265,11 +265,8 @@ stdenv.mkDerivation (
 
       blenderExecutable = placeholder "out" + ("/bin/goo-engine");
 
-      # buildPhase = ''
-      #   cat Makefile
-      # '';
-
-      installPhase = ''
+      buildPhase = ''
+        cat Makefile
         echo "Current Build Dir: $(pwd)"
         ${pkgs.eza}/bin/eza -la --group-directories-first --git-ignore --icons --tree --hyperlink --level 3
 
@@ -284,6 +281,9 @@ stdenv.mkDerivation (
 
         echo "Output AFTER MAKE INSTALL: $out"
         ${pkgs.eza}/bin/eza -la --group-directories-first --git-ignore --icons --tree --hyperlink --level 3 $out
+      '';
+
+      installPhase = ''
         # cp -r share/* "$out/share/"
         # cp -r $src/share/blender $out/share
         # cp -r $src/share/doc $out/share
