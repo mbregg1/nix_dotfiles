@@ -17,7 +17,7 @@ in
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
     zfs = {
-      devNodes = lib.mkDefault "/dev/disk/by-id";
+      devNodes = "/dev/disk/by-partuuid";
       package = pkgs.zfs_unstable;
       requestEncryptionCredentials = cfg.encryption;
     };

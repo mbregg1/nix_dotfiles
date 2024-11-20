@@ -89,7 +89,7 @@ install_type=$(yesno "Do you wish to install onto a whole empty disk [y]; or sel
 # FULL DISK SELECTION
 
 # Select whole disk
-DISKINPUT=$(ls -r /dev/disk/by-id/ | fzf --prompt="Select disk to install nixos on [WITHOUT '-part']: " | cut -d ' ' -f 1)
+DISKINPUT=$(ls -r /dev/disk/by-partuuid/ | fzf --prompt="Select disk to install nixos on [WITHOUT '-part']: " | cut -d ' ' -f 1)
 
         if [[ $DISKINPUT == *part* ]]; then
             echo "Error: Select full disk without 'part' in the id name."
@@ -100,14 +100,14 @@ DISKINPUT=$(ls -r /dev/disk/by-id/ | fzf --prompt="Select disk to install nixos 
 
         echo ""
 
-        DISK="/dev/disk/by-id/${DISKINPUT}"
+        DISK="/dev/disk/by-uuid/${DISKINPUT}"
         # Check if the specified disk exists
         if [[ -e $DISK && ! -d $DISK ]]; then
             BOOTDISK="${DISK}-part1"
             SWAPDISK="${DISK}-part2"
             ZFSDISK="${DISK}-part3"
         else
-            echo "Error: Selected disk not found in /dev/disk/by-id directory."
+            echo "Error: Selected disk not found in /dev/disk/by-partuuid directory."
             exit
         fi
 
@@ -223,13 +223,13 @@ DISKINPUT=$(ls -r /dev/disk/by-id/ | fzf --prompt="Select disk to install nixos 
     else
 
 # MANUAL PARTITION SELECTION
-        BOOTDISK_INPUT=$(ls -r /dev/disk/by-id/ | fzf --prompt="Select Boot Partition: " | cut -d ' ' -f 1)
-        SWAPDISK_INPUT=$(ls -r /dev/disk/by-id/ | fzf --prompt="Select Swap Partition: " | cut -d ' ' -f 1)
-        ZFSDISK_INPUT=$(ls -r /dev/disk/by-id/ | fzf --prompt="Select ZFS Root Partition [zroot]: " | cut -d ' ' -f 1)
+        BOOTDISK_INPUT=$(ls -r /dev/disk/by-partuuid/ | fzf --prompt="Select Boot Partition: " | cut -d ' ' -f 1)
+        SWAPDISK_INPUT=$(ls -r /dev/disk/by-partuuid/ | fzf --prompt="Select Swap Partition: " | cut -d ' ' -f 1)
+        ZFSDISK_INPUT=$(ls -r /dev/disk/by-partuuid/ | fzf --prompt="Select ZFS Root Partition [zroot]: " | cut -d ' ' -f 1)
 
-        BOOTDISK="/dev/disk/by-id/${BOOTDISK_INPUT}"
-        SWAPDISK="/dev/disk/by-id/${SWAPDISK_INPUT}"
-        ZFSDISK="/dev/disk/by-id/${ZFSDISK_INPUT}"
+        BOOTDISK="/dev/disk/by-partuuid/${BOOTDISK_INPUT}"
+        SWAPDISK="/dev/disk/by-partuuid/${SWAPDISK_INPUT}"
+        ZFSDISK="/dev/disk/by-partuuid/${ZFSDISK_INPUT}"
 
         # CHECK Selected partitions
         echo "Selected partitions:"
